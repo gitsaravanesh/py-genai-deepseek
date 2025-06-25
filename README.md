@@ -41,9 +41,16 @@ A lightweight web-based chat interface that connects to an Ollama instance servi
    source venv/bin/activate
    ```
 
-3. **Install dependencies**
+3. **Install ollama and dependencies**
 
    ```bash
+   export OLLAMA_NO_CUDA=1
+   curl -fsSL https://ollama.com/install.sh | sh
+   sudo systemctl enable --now ollama
+
+   ollama --version
+   sudo ss -tunlp | grep 11434 
+
    pip install --upgrade pip
    pip install streamlit requests
    ```
