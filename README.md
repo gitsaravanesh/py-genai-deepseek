@@ -94,38 +94,7 @@ If you prefer a zero-Python, static HTML approach:
 
    ```bash
    sudo mkdir -p /var/www/html
-   sudo tee /var/www/html/index.html << 'EOF'
-   <!DOCTYPE html>
-   <html>
-   <head>
-     <meta charset="utf-8">
-     <title>DeepSeek Chat</title>
-     <style>
-       body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
-       textarea { width: 100%; height: 100px; }
-       pre { background: #f4f4f4; padding: 1rem; white-space: pre-wrap; }
-     </style>
-   </head>
-   <body>
-     <h1>DeepSeek Chat</h1>
-     <textarea id="prompt" placeholder="Type your question…"></textarea><br>
-     <button onclick="send()">Send</button>
-     <pre id="response"></pre>
-     <script>
-       async function send() {
-         const p = document.getElementById('prompt').value;
-         const res = await fetch('/chat', {
-           method: 'POST',
-           headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify({ model: 'deepseek-coder:1.3b-instruct', prompt: p, stream: false })
-         });
-         const json = await res.json();
-         document.getElementById('response').textContent = json.response;
-       }
-     </script>
-   </body>
-   </html>
-   EOF
+   cp index.html /var/www/html/index.html
    ```
 4. **Configure Nginx** by editing `/etc/nginx/sites-available/default`:
 
