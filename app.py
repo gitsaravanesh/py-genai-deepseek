@@ -1,18 +1,23 @@
 import streamlit as st
-import requests
+import requests, json
 
-st.title("DeepSeek Chat UI")
-prompt = st.text_input("Enter your prompt:")
+MODEL = "deepseek-coder:1.3b-instruct"
+API   = "http://127.0.0.1:11434/api/generate"
+
+st.title("MY LLM")
+
+if 'history' not in st.session_state:
+    st.session_state.history = []
+
+prompt = st.text_area("Your prompt:", height=120)
 
 if st.button("Send"):
-    payload = {
-        "model": "deepseek-coder:1.3b-instruct",
-        "prompt": prompt,
-        "stream": False
-    }
-    resp = requests.post("http://127.0.0.1:11434/api/generate", json=payload)
-    if resp.ok:
-        data = resp.json()
-        st.text_area("Response", data.get("response", ""), height=200)
-    else:
-        st.error(f"Error {resp.status_code}: {resp.text}")
+    payload = {"model": MODEL, "prompt": prompt, "stream": False}
+    r = requests.post(API, json=payload)
+    r.raise_for_status()
+    reply = r.json().get("response", "")
+    st.session_state.history.append(("You", prompt))
+    st.session_state.history.append(("AI", reply))
+
+for who, text in st.session_state.history[::-1]:
+    st.markdown(f"**{who}:** {text}")
