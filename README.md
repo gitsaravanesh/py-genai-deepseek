@@ -79,45 +79,6 @@ streamlit run app.py \
 
 Browse to `http://<ec2-public-ip>:8501` and start chatting!
 
-### Serving via Nginx Static Frontend (Optional)
-
-If you prefer a zero-Python, static HTML approach:
-
-1. **Install Nginx**
-
-   ```bash
-   sudo apt-get update
-   sudo apt-get install -y nginx
-   ```
-2. **Open port 80** in your security group.
-3. **Place static files** in the web root:
-
-   ```bash
-   sudo mkdir -p /var/www/html
-   cp index.html /var/www/html/index.html
-   ```
-4. **Configure Nginx** by editing `/etc/nginx/sites-available/default`:
-
-   ```nginx
-   server {
-     listen 80 default_server;
-     listen [::]:80 default_server;
-     root /var/www/html;
-     index index.html;
-
-     location /chat {
-       proxy_pass http://127.0.0.1:11434/api/generate;
-       proxy_set_header Content-Type application/json;
-     }
-   }
-   ```
-5. **Restart Nginx**
-
-   ```bash
-   sudo nginx -t && sudo systemctl restart nginx
-   ```
-6. **Browse** to `http://<ec2-public-ip>/` and chat away.
-
 ## Configuration
 
 * **Model**: Change the `model` field in the `payload` dict inside `app.py` or `index.html` to any Ollama model name.
